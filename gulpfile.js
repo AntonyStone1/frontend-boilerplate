@@ -1,6 +1,6 @@
 // Initialize modules
 // Importing specific gulp API functions lets us write them below as series() instead of gulp.series()
-const { src, dest, watch, series, parallel } = require('gulp');
+const { src, dest, watch, series, parallel, task } = require('gulp');
 // Importing all the Gulp-related packages we want to use
 const sass = require('gulp-sass')(require('sass'));
 const concat = require('gulp-concat');
@@ -10,20 +10,26 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const replace = require('gulp-replace');
 const browsersync = require('browser-sync').create();
-
+const urlAdjuster = require('gulp-css-url-adjuster')
 // File paths
 const files = {
 	scssPath: 'app/scss/**/*.scss',
 	jsPath: 'app/js/**/*.js',
+	imgPath: 'app/img/**/*'
 };
 
 // Sass task: compiles the style.scss file into style.css
 function scssTask() {
 	return src(files.scssPath, { sourcemaps: true }) // set source and turn on sourcemaps
 		.pipe(sass()) // compile SCSS to CSS
-		.pipe(postcss([autoprefixer(), cssnano()])) // PostCSS plugins
+		.pipe(postcss([autoprefixer(), cssnano()]))
 		.pipe(dest('dist', { sourcemaps: '.' })); // put final CSS in dist folder with sourcemap
 }
+// function imgTask() {
+// 	return src(files.imgPath,) 
+// 		.pipe(imagemin()) 
+// 		.pipe(dest('./dist')); // put final CSS in dist folder with sourcemap
+// }
 
 // JS task: concatenates and uglifies JS files to script.js
 function jsTask() {
@@ -73,7 +79,7 @@ function browserSyncReload(cb) {
 // If any change, run scss and js tasks simultaneously
 function watchTask() {
 	watch(
-		[files.scssPath, files.jsPath],
+		[files.scssPath, files.jsPath, files.imgPath],
 		{ interval: 1000, usePolling: true }, //Makes docker work
 		series(parallel(scssTask, jsTask), cacheBustTask)
 	);
@@ -85,7 +91,7 @@ function watchTask() {
 function bsWatchTask() {
 	watch('index.html', browserSyncReload);
 	watch(
-		[files.scssPath, files.jsPath],
+		[files.scssPath, files.jsPath, files.imgPath],
 		{ interval: 1000, usePolling: true }, //Makes docker work
 		series(parallel(scssTask, jsTask), cacheBustTask, browserSyncReload)
 	);

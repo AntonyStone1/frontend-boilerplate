@@ -2,3 +2,38 @@
 @import "colors";
 @import "global";
 @import "typography";
+@import 'normalize';
+@import 'componentsStyles/header';
+@import 'componentsStyles/about-us';
+@import 'componentsStyles/benefits';
+@import 'componentsStyles/get-info';
+@import 'componentsStyles/footer';
+@import 'components/buttons';
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: $dkGray;
+}
+
+.container {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.blue_text {
+  color: $aquaBlue;
+}
+
+.logo {
+  width: fit-content;
+
+  object {
+    pointer-events: none;
+    width: 100px;
+    height: 20px;
+  }
+}
